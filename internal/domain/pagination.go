@@ -1,4 +1,4 @@
-package models
+package domain
 
 type Pagination struct {
 	Page         uint64

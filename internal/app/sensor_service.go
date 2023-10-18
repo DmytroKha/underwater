@@ -1,12 +1,12 @@
 package app
 
 import (
+	"github.com/DmytroKha/underwater/internal/domain"
 	"github.com/DmytroKha/underwater/internal/infra/database"
-	"github.com/DmytroKha/underwater/internal/models"
 )
 
 type SensorService interface {
-	FindAll() ([]models.Sensor, error)
+	FindAll() ([]domain.Sensor, error)
 }
 
 type sensorService struct {
@@ -19,6 +19,6 @@ func NewSensorService(r database.SensorRepository) SensorService {
 	}
 }
 
-func (s sensorService) FindAll() ([]models.Sensor, error) {
+func (s sensorService) FindAll() ([]domain.Sensor, error) {
 	return s.sensorRepo.FindAll()
 }
