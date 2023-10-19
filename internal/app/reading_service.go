@@ -13,6 +13,7 @@ import (
 type ReadingService interface {
 	StartSensorDataGeneration()
 	generateSensorData(sensor domain.Sensor)
+	GetAverageTemperatureBySensor(sensorID int64, from int64, till int64) (float64, error)
 }
 
 type readingService struct {
@@ -45,6 +46,12 @@ func (s readingService) StartSensorDataGeneration() {
 		go s.generateSensorData(sensor)
 	}
 	select {}
+}
+
+func (s readingService) GetAverageTemperatureBySensor(sensorID int64, from int64, till int64) (float64, error) {
+	fromDate := time.Unix(from, 0)
+	tillDate := time.Unix(till, 0)
+	return s.readingRepo.GetAverageTemperatureBySensor(sensorID, fromDate, tillDate)
 }
 
 func (s readingService) generateSensorData(sensor domain.Sensor) {

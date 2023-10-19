@@ -48,7 +48,7 @@ func Router(
 
 		// Serve Swagger UI at /swagger
 		apiRouter.Get("/swagger/*", httpSwagger.Handler(
-			httpSwagger.URL("http://localhost:8080/swagger/doc.json"), // Point to your Swagger JSON URL
+			httpSwagger.URL("doc.json"), // Point to your Swagger JSON URL
 		))
 	})
 

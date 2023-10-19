@@ -11,7 +11,7 @@ import (
 // @Tags     Health
 // @Accept   json
 // @Produce  json
-// @Success  200  {string}  response
+// @Success  200  {string}  "OK"
 // @Router   /ping [get]
 func PingHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

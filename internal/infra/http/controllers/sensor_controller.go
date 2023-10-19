@@ -26,15 +26,16 @@ func NewSensorController(s app.SensorService) SensorController {
 // @Param from query int true "From Date/Time (UNIX Timestamp)"
 // @Param till query int true "Till Date/Time (UNIX Timestamp)"
 // @Produce json
-// @Success 200 {object} SuccessResponse
-// @Failure 400 {object} ErrorResponse
+// @Success 200 {object} int64
+// @Failure 400 {string} http.StatusBadRequest
+// @Failure 500 {string} http.StatusInternalServerError
 // @Router /sensor/{codeName}/temperature/average [get]
 func (c SensorController) GetSensorTemperatureAverage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		codeName := chi.URLParam(r, "codeName")
 		if codeName == "" {
 			err := errors.New("code name is empty")
-			log.Print(err)
+			log.Printf("SensorController: %s", err)
 			BadRequest(w, err)
 			return
 		}
@@ -44,7 +45,7 @@ func (c SensorController) GetSensorTemperatureAverage() http.HandlerFunc {
 
 		if fromStr == "" || tillStr == "" {
 			err := errors.New("from or till parameter is missing")
-			log.Print(err)
+			log.Printf("SensorController: %s", err)
 			BadRequest(w, err)
 			return
 		}
@@ -52,7 +53,7 @@ func (c SensorController) GetSensorTemperatureAverage() http.HandlerFunc {
 		from, err := strconv.ParseInt(fromStr, 10, 64)
 		if err != nil {
 			err = errors.New("from parameter is not a valid UNIX timestamp")
-			log.Print(err)
+			log.Printf("SensorController: %s", err)
 			BadRequest(w, err)
 			return
 		}
@@ -60,27 +61,29 @@ func (c SensorController) GetSensorTemperatureAverage() http.HandlerFunc {
 		till, err := strconv.ParseInt(tillStr, 10, 64)
 		if err != nil {
 			err = errors.New("till parameter is not a valid UNIX timestamp")
-			log.Print(err)
+			log.Printf("SensorController: %s", err)
 			BadRequest(w, err)
 			return
 		}
 
 		if from < 0 || till < 0 || from > till {
 			err = errors.New("from and till parameters are not in a valid range")
-			log.Print(err)
+			log.Printf("SensorController: %s", err)
 			BadRequest(w, err)
 			return
 		}
 
 		//addr, err = c.addrService.Update(addr)
-		//if err != nil {
-		//	log.Printf("AdminAddressController: %s", err)
-		//	controllers.BadRequest(w, err)
-		//	return
-		//}
+
 		//
 		//var addrDto resources.AddressDto
-		//controllers.Success(w, addrDto.DomainToDto(addr))
+		averageTemperature, err := c.sensorService.GetAverageTemperatureBySensor(codeName, from, till)
+		if err != nil {
+			log.Printf("SensorController: %s", err)
+			InternalServerError(w, err)
+			return
+		}
+		Success(w, averageTemperature)
 
 	}
 }

@@ -5,5 +5,56 @@ info:
   description: API Server for Halo Underwater application.
   title: Halo Underwater API
   version: "1.0"
-paths: {}
+paths:
+  /ping:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: This endpoint can be used as health check for this application.
+      tags:
+      - Health
+  /sensor/{codeName}/temperature/average:
+    get:
+      description: Get the average temperature detected by a particular sensor between
+        specified date/time pairs.
+      operationId: get-sensor-temperature-average
+      parameters:
+      - description: Code Name of the Sensor
+        in: path
+        name: codeName
+        required: true
+        type: string
+      - description: From Date/Time (UNIX Timestamp)
+        in: query
+        name: from
+        required: true
+        type: integer
+      - description: Till Date/Time (UNIX Timestamp)
+        in: query
+        name: till
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get Sensor Temperature Average
 swagger: "2.0"

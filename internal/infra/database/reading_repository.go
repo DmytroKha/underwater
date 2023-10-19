@@ -14,12 +14,11 @@ type reading struct {
 	Timestamp    time.Time `db:"timestamp"`
 	Temperature  float64   `db:"temperature"`
 	Transparency int64     `db:"transparency"`
-	FishSpecies  []byte    `db:"fish_species"`
 }
 
 type ReadingRepository interface {
 	Save(reading domain.Reading) (domain.Reading, error)
-	//FindAll() ([]models.Sensor, error)
+	GetAverageTemperatureBySensor(sensorID int64, from time.Time, till time.Time) (float64, error)
 }
 
 type readingRepository struct {
@@ -43,34 +42,52 @@ func (r readingRepository) Save(reading domain.Reading) (domain.Reading, error) 
 	return r.mapModelToDomain(re), nil
 }
 
+func (r readingRepository) GetAverageTemperatureBySensor(sensorID int64, fromDate time.Time, tillDate time.Time) (float64, error) {
+	var averageTemperature float64
+
+	query := r.coll.Find(db.Cond{
+		"sensor_id =":  sensorID,
+		"timestamp >=": fromDate,
+		"timestamp <=": tillDate,
+	})
+
+	var results []struct {
+		Temperature float64 `db:"temperature"`
+	}
+
+	err := query.All(&results)
+	if err != nil {
+		return 0, err
+	}
+
+	if len(results) > 0 {
+		var totalTemperature float64
+		for _, result := range results {
+			totalTemperature += result.Temperature
+		}
+		averageTemperature = totalTemperature / float64(len(results))
+	}
+
+	return averageTemperature, nil
+}
+
 func (r readingRepository) mapDomainToModel(re domain.Reading) reading {
-	//fishSpeciesJSON, err := json.Marshal(re.FishSpecies)
-	//if err != nil {
-	//	fishSpeciesJSON = nil
-	//}
 	return reading{
 		ID:           re.ID,
 		SensorID:     re.SensorID,
 		Timestamp:    re.Timestamp,
 		Temperature:  re.Temperature,
 		Transparency: re.Transparency,
-		//FishSpecies:  fishSpeciesJSON,
 	}
 }
 
 func (r readingRepository) mapModelToDomain(re reading) domain.Reading {
-	//var fishSpecies []domain.FishSpecies
-	//err := json.Unmarshal(re.FishSpecies, fishSpecies)
-	//if err != nil {
-	//	fishSpecies = []domain.FishSpecies{}
-	//}
 	return domain.Reading{
 		ID:           re.ID,
 		SensorID:     re.SensorID,
 		Timestamp:    re.Timestamp,
 		Temperature:  re.Temperature,
 		Transparency: re.Transparency,
-		//FishSpecies:  fishSpecies,
 	}
 }
 

@@ -71,10 +71,10 @@ func main() {
 	fishSpeciesRepository := database.NewFishSpeciesRepository(sess)
 
 	//Service
-	//var fishSpeciesService app.FishSpeciesService
-	sensorService := app.NewSensorService(sensorRepository)
+	var readingService app.ReadingService
+	sensorService := app.NewSensorService(sensorRepository, &readingService)
 	fishSpeciesService := app.NewFishSpeciesService(fishSpeciesRepository)
-	readingService := app.NewReadingService(readingRepository, sensorService, fishSpeciesService)
+	readingService = app.NewReadingService(readingRepository, sensorService, fishSpeciesService)
 
 	//Controllers
 	sensorController := controllers.NewSensorController(sensorService)
