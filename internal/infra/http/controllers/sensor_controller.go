@@ -73,10 +73,6 @@ func (c SensorController) GetSensorTemperatureAverage() http.HandlerFunc {
 			return
 		}
 
-		//addr, err = c.addrService.Update(addr)
-
-		//
-		//var addrDto resources.AddressDto
 		averageTemperature, err := c.sensorService.GetAverageTemperatureBySensor(codeName, from, till)
 		if err != nil {
 			log.Printf("SensorController: %s", err)
