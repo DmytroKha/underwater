@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/DmytroKha/underwater/config"
+	_ "github.com/DmytroKha/underwater/docs"
 	"github.com/DmytroKha/underwater/internal/app"
 	"github.com/DmytroKha/underwater/internal/infra/database"
 	"github.com/DmytroKha/underwater/internal/infra/http"
@@ -16,6 +17,11 @@ import (
 	"syscall"
 )
 
+// @title       Halo Underwater API
+// @version     1.0
+// @description API Server for Halo Underwater application.
+// @host     localhost:8080
+// @BasePath  /api/v1
 func main() {
 
 	exitCode := 0
@@ -74,8 +80,6 @@ func main() {
 	sensorController := controllers.NewSensorController(sensorService)
 	readingController := controllers.NewReadingController(readingService, sensorService)
 
-	readingService.StartSensorDataGeneration()
-
 	// HTTP Server
 	err = http.Server(
 		ctx,
@@ -90,5 +94,7 @@ func main() {
 		exitCode = 2
 		return
 	}
+
+	readingService.StartSensorDataGeneration()
 
 }
