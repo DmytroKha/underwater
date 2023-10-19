@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/DmytroKha/underwater/config"
 	"github.com/DmytroKha/underwater/internal/domain"
 	"github.com/DmytroKha/underwater/internal/infra/database"
 	"math/rand"
@@ -46,8 +47,8 @@ func generateFakeFishSpecies() map[string]int64 {
 	fishCount := make(map[string]int64)
 
 	for i := 0; i < numFishSpecies; i++ {
-		randomIndex := rand.Intn(len(allFish))
-		randomFish := allFish[randomIndex]
+		randomIndex := rand.Intn(len(config.AllFish))
+		randomFish := config.AllFish[randomIndex]
 		fishCount[randomFish]++
 	}
 

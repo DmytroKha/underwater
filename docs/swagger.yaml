@@ -39,7 +39,6 @@ paths:
       - description: Till Date/Time (UNIX Timestamp)
         in: query
         name: till
-        required: true
         type: integer
       produces:
       - application/json

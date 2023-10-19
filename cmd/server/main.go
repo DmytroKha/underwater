@@ -9,6 +9,7 @@ import (
 	"github.com/DmytroKha/underwater/internal/infra/database"
 	"github.com/DmytroKha/underwater/internal/infra/http"
 	"github.com/DmytroKha/underwater/internal/infra/http/controllers"
+	"github.com/DmytroKha/underwater/internal/infra/jobs"
 	"github.com/upper/db/v4/adapter/postgresql"
 	"log"
 	"os"
@@ -16,6 +17,22 @@ import (
 	"runtime/debug"
 	"syscall"
 )
+
+//var AllFish []string
+//
+//func init() {
+//	url := "https://oceana.org/ocean-fishes/"
+//
+//	doc, err := goquery.NewDocument(url)
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//
+//	doc.Find("div.tb-grid-column h2").Each(func(index int, item *goquery.Selection) {
+//		fishName := item.Text()
+//		AllFish = append(AllFish, fishName)
+//	})
+//}
 
 // @title       Halo Underwater API
 // @version     1.0
@@ -48,6 +65,7 @@ func main() {
 	}()
 
 	var conf = config.GetConfiguration()
+	config.GenerateFishSpecies()
 
 	err := database.Migrate(conf)
 	if err != nil {
@@ -95,6 +113,7 @@ func main() {
 		return
 	}
 
-	readingService.StartSensorDataGeneration()
+	//readingService.StartSensorDataGeneration()
+	jobs.StartSensorDataGeneration(&readingService, &sensorService)
 
 }

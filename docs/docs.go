@@ -65,8 +65,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "Till Date/Time (UNIX Timestamp)",
                         "name": "till",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {

@@ -27,14 +27,14 @@ func Router(
 
 	router.Route("/api", func(apiRouter chi.Router) {
 
-		// Health
-		apiRouter.Route("/ping", func(healthRouter chi.Router) {
-			healthRouter.Get("/", PingHandler())
-
-			healthRouter.Handle("/*", NotFoundJSON())
-		})
-
 		apiRouter.Route("/v1", func(apiRouter chi.Router) {
+
+			// Health
+			apiRouter.Route("/ping", func(healthRouter chi.Router) {
+				healthRouter.Get("/", PingHandler())
+
+				healthRouter.Handle("/*", NotFoundJSON())
+			})
 
 			// Routes
 			apiRouter.Group(func(apiRouter chi.Router) {
@@ -44,6 +44,7 @@ func Router(
 
 				apiRouter.Handle("/*", NotFoundJSON())
 			})
+
 		})
 
 		// Serve Swagger UI at /swagger

@@ -3,7 +3,6 @@ package app
 import (
 	"github.com/DmytroKha/underwater/internal/domain"
 	"github.com/DmytroKha/underwater/internal/infra/database"
-	"github.com/PuerkitoBio/goquery"
 	"log"
 	"math/rand"
 	"sync"
@@ -11,8 +10,8 @@ import (
 )
 
 type ReadingService interface {
-	StartSensorDataGeneration()
-	generateSensorData(sensor domain.Sensor)
+	//StartSensorDataGeneration()
+	GenerateSensorData(sensor domain.Sensor)
 	GetAverageTemperatureBySensor(sensorID int64, from int64, till int64) (float64, error)
 }
 
@@ -23,7 +22,8 @@ type readingService struct {
 }
 
 var previousTransparency = make(map[int64]int64)
-var allFish []string
+
+//var allFish []string
 var transparencyMutex sync.Mutex
 
 func NewReadingService(r database.ReadingRepository, ss SensorService, fs FishSpeciesService) ReadingService {
@@ -34,19 +34,19 @@ func NewReadingService(r database.ReadingRepository, ss SensorService, fs FishSp
 	}
 }
 
-func (s readingService) StartSensorDataGeneration() {
-	generateFishSpecies()
-	sensors, err := s.sensorService.FindAll()
-	if err != nil {
-		log.Print(err)
-		return
-	}
-
-	for _, sensor := range sensors {
-		go s.generateSensorData(sensor)
-	}
-	select {}
-}
+//func (s readingService) StartSensorDataGeneration() {
+//	generateFishSpecies()
+//	sensors, err := s.sensorService.FindAll()
+//	if err != nil {
+//		log.Print(err)
+//		return
+//	}
+//
+//	for _, sensor := range sensors {
+//		go s.GenerateSensorData(sensor)
+//	}
+//	select {}
+//}
 
 func (s readingService) GetAverageTemperatureBySensor(sensorID int64, from int64, till int64) (float64, error) {
 	fromDate := time.Unix(from, 0)
@@ -54,7 +54,7 @@ func (s readingService) GetAverageTemperatureBySensor(sensorID int64, from int64
 	return s.readingRepo.GetAverageTemperatureBySensor(sensorID, fromDate, tillDate)
 }
 
-func (s readingService) generateSensorData(sensor domain.Sensor) {
+func (s readingService) GenerateSensorData(sensor domain.Sensor) {
 	for {
 		reading := generateFakeReading(sensor)
 		transparencyMutex.Lock()
@@ -80,8 +80,7 @@ func generateFakeReading(sensor domain.Sensor) domain.Reading {
 		SensorID:     sensor.ID,
 		Temperature:  generateFakeTemperature(sensor.Z),
 		Transparency: generateFakeTransparency(sensor.GroupID),
-		//FishSpecies:  generateFakeFishSpecies(),
-		Timestamp: time.Now(),
+		Timestamp:    time.Now(),
 	}
 }
 
@@ -114,18 +113,18 @@ func generateFakeTransparency(groupID int64) int64 {
 	return newTransparency
 }
 
-func generateFishSpecies() {
-
-	url := "https://oceana.org/ocean-fishes/"
-
-	doc, err := goquery.NewDocument(url)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	doc.Find("div.tb-grid-column h2").Each(func(index int, item *goquery.Selection) {
-		fishName := item.Text()
-		allFish = append(allFish, fishName)
-	})
-
-}
+//func generateFishSpecies() {
+//
+//	url := "https://oceana.org/ocean-fishes/"
+//
+//	doc, err := goquery.NewDocument(url)
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//
+//	doc.Find("div.tb-grid-column h2").Each(func(index int, item *goquery.Selection) {
+//		fishName := item.Text()
+//		allFish = append(allFish, fishName)
+//	})
+//
+//}
