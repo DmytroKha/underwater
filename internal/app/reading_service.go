@@ -14,7 +14,7 @@ type ReadingService interface {
 	GetAverageTemperatureBySensor(sensorID int64, from int64, till int64) (float64, error)
 	GetAverageTemperatureForGroup(sensorsIDs []int64) (float64, error)
 	GetAverageTransparencyForGroup(sensorsIDs []int64) (float64, error)
-	FindBySensorsIDs(sensorsIDs []int64) ([]domain.Reading, error)
+	FindBySensorsIDs(sensorsIDs []int64, from int64, till int64) ([]domain.Reading, error)
 }
 
 type readingService struct {
@@ -49,8 +49,10 @@ func (s readingService) GetAverageTransparencyForGroup(sensorsIDs []int64) (floa
 	return s.readingRepo.GetAverageTransparencyForGroup(sensorsIDs)
 }
 
-func (s readingService) FindBySensorsIDs(sensorsIDs []int64) ([]domain.Reading, error) {
-	return s.readingRepo.FindBySensorsIDs(sensorsIDs)
+func (s readingService) FindBySensorsIDs(sensorsIDs []int64, from int64, till int64) ([]domain.Reading, error) {
+	fromDate := time.Unix(from, 0)
+	tillDate := time.Unix(till, 0)
+	return s.readingRepo.FindBySensorsIDs(sensorsIDs, fromDate, tillDate)
 }
 
 func (s readingService) GenerateSensorData(sensor domain.Sensor) {

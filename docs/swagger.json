@@ -51,6 +51,67 @@
                 }
             }
         },
+        "/group/{groupName}/species/top/{N}": {
+            "get": {
+                "description": "Get top fish species in a group.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Group Top Fish Species",
+                "operationId": "get-group-top-fish-species",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Name of the Sensors",
+                        "name": "groupName",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Count of top fishes",
+                        "name": "N",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "From Date/Time (UNIX Timestamp)",
+                        "name": "from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Till Date/Time (UNIX Timestamp)",
+                        "name": "till",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/resources.FishDto"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/group/{groupName}/temperature/average": {
             "get": {
                 "description": "Get the average temperature detected by a particular sensors in a group.",

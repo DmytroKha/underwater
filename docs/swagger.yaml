@@ -42,6 +42,47 @@ paths:
           schema:
             type: string
       summary: Get Group Fish Species
+  /group/{groupName}/species/top/{N}:
+    get:
+      description: Get top fish species in a group.
+      operationId: get-group-top-fish-species
+      parameters:
+      - description: Group Name of the Sensors
+        in: path
+        name: groupName
+        required: true
+        type: string
+      - description: Count of top fishes
+        in: path
+        name: "N"
+        required: true
+        type: string
+      - description: From Date/Time (UNIX Timestamp)
+        in: query
+        name: from
+        type: integer
+      - description: Till Date/Time (UNIX Timestamp)
+        in: query
+        name: till
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/resources.FishDto'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get Group Top Fish Species
   /group/{groupName}/temperature/average:
     get:
       description: Get the average temperature detected by a particular sensors in

@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type GroupController struct {
@@ -99,6 +100,78 @@ func (c GroupController) GetGroupFishSpecies() http.HandlerFunc {
 		}
 
 		fishes, err := c.groupService.GetFishesForGroup(groupName)
+		if err != nil {
+			log.Printf("GroupController: %s", err)
+			InternalServerError(w, err)
+			return
+		}
+
+		var fishesDto resources.FishDto
+		Success(w, fishesDto.DomainToDtoCollection(fishes))
+
+	}
+}
+
+// @Summary Get Group Top Fish Species
+// @Description Get top fish species in a group.
+// @ID get-group-top-fish-species
+// @Param groupName path string true "Group Name of the Sensors"
+// @Param N path string true "Count of top fishes"
+// @Param from query int false "From Date/Time (UNIX Timestamp)"
+// @Param till query int false "Till Date/Time (UNIX Timestamp)"
+// @Produce json
+// @Success 200 {object} []resources.FishDto
+// @Failure 400 {string} http.StatusBadRequest
+// @Failure 500 {string} http.StatusInternalServerError
+// @Router /group/{groupName}/species/top/{N} [get]
+func (c GroupController) GetGroupTopFishSpecies() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		groupName := chi.URLParam(r, "groupName")
+		if groupName == "" {
+			err := errors.New("group name is empty")
+			log.Printf("GroupController: %s", err)
+			BadRequest(w, err)
+			return
+		}
+
+		fishCount, err := strconv.ParseInt(chi.URLParam(r, "N"), 10, 64)
+		if err != nil {
+			log.Printf("GroupController: %s", err)
+			BadRequest(w, err)
+			return
+		}
+
+		var from, till int64
+
+		fromStr := r.URL.Query().Get("from")
+		tillStr := r.URL.Query().Get("till")
+
+		if fromStr != "" || tillStr != "" {
+			from, err = strconv.ParseInt(fromStr, 10, 64)
+			if err != nil {
+				err = errors.New("from parameter is not a valid UNIX timestamp")
+				log.Printf("GroupController: %s", err)
+				BadRequest(w, err)
+				return
+			}
+
+			till, err = strconv.ParseInt(tillStr, 10, 64)
+			if err != nil {
+				err = errors.New("till parameter is not a valid UNIX timestamp")
+				log.Printf("GroupController: %s", err)
+				BadRequest(w, err)
+				return
+			}
+
+			if from < 0 || till < 0 || from > till {
+				err = errors.New("from and till parameters are not in a valid range")
+				log.Printf("GroupController: %s", err)
+				BadRequest(w, err)
+				return
+			}
+		}
+
+		fishes, err := c.groupService.GetTopFishesForGroup(groupName, fishCount, from, till)
 		if err != nil {
 			log.Printf("GroupController: %s", err)
 			InternalServerError(w, err)

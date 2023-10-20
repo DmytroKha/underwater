@@ -18,10 +18,10 @@ type reading struct {
 
 type ReadingRepository interface {
 	Save(reading domain.Reading) (domain.Reading, error)
-	GetAverageTemperatureBySensor(sensorID int64, from time.Time, till time.Time) (float64, error)
+	GetAverageTemperatureBySensor(sensorID int64, fromDate time.Time, tillDate time.Time) (float64, error)
 	GetAverageTemperatureForGroup(sensorsIds []int64) (float64, error)
 	GetAverageTransparencyForGroup(sensorsIds []int64) (float64, error)
-	FindBySensorsIDs(sensorsIDs []int64) ([]domain.Reading, error)
+	FindBySensorsIDs(sensorsIDs []int64, fromDate time.Time, tillDate time.Time) ([]domain.Reading, error)
 }
 
 type readingRepository struct {
@@ -111,10 +111,18 @@ func (r readingRepository) GetAverageTransparencyForGroup(sensorsIDs []int64) (f
 	return averageTransparency, nil
 }
 
-func (r readingRepository) FindBySensorsIDs(sensorsIDs []int64) ([]domain.Reading, error) {
+func (r readingRepository) FindBySensorsIDs(sensorsIDs []int64, fromDate time.Time, tillDate time.Time) ([]domain.Reading, error) {
 	var re []reading
 
-	err := r.coll.Find(db.Cond{"sensor_id IN": sensorsIDs}).All(&re)
+	dbCond := db.Cond{}
+	dbCond["sensor_id IN"] = sensorsIDs
+	if fromDate != tillDate {
+		dbCond["timestamp >="] = fromDate
+		dbCond["timestamp <="] = tillDate
+
+	}
+
+	err := r.coll.Find(dbCond).All(&re)
 	if err != nil {
 		return []domain.Reading{}, err
 	}

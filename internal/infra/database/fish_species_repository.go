@@ -17,6 +17,7 @@ type fishSpecies struct {
 type FishSpeciesRepository interface {
 	Save(reading domain.FishSpecies) error
 	GetFishesForGroup(readingsIDs []int64) ([]domain.FishSpecies, error)
+	GetTopFishesForGroup(readingsIDs []int64, fishCount int64) ([]domain.FishSpecies, error)
 }
 
 type fishSpeciesRepository struct {
@@ -45,10 +46,37 @@ func (r fishSpeciesRepository) Save(fishSpecies domain.FishSpecies) error {
 func (r fishSpeciesRepository) GetFishesForGroup(readingsIDs []int64) ([]domain.FishSpecies, error) {
 	var fs []fishSpecies
 
-	//err := r.coll.Find(db.Cond{"reading_id IN": readingsIDs}).All(&fs)
 	query := r.sess.SQL().Select(db.Raw("name, SUM(count) AS count")).From("fish_species").
 		Where(db.Cond{"reading_id IN": readingsIDs}).
-		GroupBy("name")
+		GroupBy("name").
+		OrderBy("name")
+	//OrderBy("count DESC")
+
+	err := query.All(&fs)
+
+	if err != nil {
+		return []domain.FishSpecies{}, err
+	}
+
+	return r.mapModelToDomainCollection(fs), nil
+}
+
+func (r fishSpeciesRepository) GetTopFishesForGroup(readingsIDs []int64, fishCount int64) ([]domain.FishSpecies, error) {
+	var fs []fishSpecies
+
+	//dbCond := db.Cond{}
+	//dbCond["reading_id IN"] = readingsIDs
+	//if fromDate != tillDate {
+	//	dbCond["timestamp >="] = fromDate
+	//	dbCond["timestamp <="] = tillDate
+	//
+	//}
+
+	query := r.sess.SQL().Select(db.Raw("name, SUM(count) AS count")).From("fish_species").
+		Where(db.Cond{"reading_id IN": readingsIDs}).
+		GroupBy("name").
+		OrderBy("count DESC").
+		Limit(int(fishCount))
 
 	err := query.All(&fs)
 
