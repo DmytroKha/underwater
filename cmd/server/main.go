@@ -94,7 +94,7 @@ func main() {
 	sensorService := app.NewSensorService(sensorRepository, &readingService)
 	fishSpeciesService := app.NewFishSpeciesService(fishSpeciesRepository)
 	readingService = app.NewReadingService(readingRepository, sensorService, fishSpeciesService)
-	groupService := app.NewGroupService(groupRepository, sensorService, readingService)
+	groupService := app.NewGroupService(groupRepository, sensorService, readingService, fishSpeciesService)
 
 	//Controllers
 	sensorController := controllers.NewSensorController(sensorService)

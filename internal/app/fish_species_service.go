@@ -10,6 +10,7 @@ import (
 
 type FishSpeciesService interface {
 	Save(readingId int64) error
+	GetFishesForGroup(readingsIDs []int64) ([]domain.FishSpecies, error)
 }
 
 type fishSpeciesService struct {
@@ -37,6 +38,10 @@ func (s fishSpeciesService) Save(readingId int64) error {
 		}
 	}
 	return nil
+}
+
+func (s fishSpeciesService) GetFishesForGroup(readingsIDs []int64) ([]domain.FishSpecies, error) {
+	return s.fishSpeciesRepo.GetFishesForGroup(readingsIDs)
 }
 
 func generateFakeFishSpecies() map[string]int64 {

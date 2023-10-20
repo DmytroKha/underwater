@@ -1,4 +1,12 @@
 basePath: /api/v1
+definitions:
+  resources.FishDto:
+    properties:
+      count:
+        type: integer
+      name:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -6,6 +14,34 @@ info:
   title: Halo Underwater API
   version: "1.0"
 paths:
+  /group/{groupName}/species:
+    get:
+      description: Get fish species in a group.
+      operationId: get-group-fish-species
+      parameters:
+      - description: Group Name of the Sensors
+        in: path
+        name: groupName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/resources.FishDto'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get Group Fish Species
   /group/{groupName}/temperature/average:
     get:
       description: Get the average temperature detected by a particular sensors in
@@ -35,8 +71,7 @@ paths:
       summary: Get Group Temperature Average
   /group/{groupName}/transparency/average:
     get:
-      description: Get the average transparency detected by a particular sensors in
-        a group.
+      description: Get the average transparency detected by sensors in a group.
       operationId: get-group-transparency-average
       parameters:
       - description: Group Name of the Sensors

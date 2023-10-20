@@ -66,7 +66,7 @@ func GroupRouter(r chi.Router, groupController controllers.GroupController) {
 	r.Route("/group", func(sensorRouter chi.Router) {
 		sensorRouter.Get("/{groupName}/temperature/average", groupController.GetGroupTemperatureAverage())
 		sensorRouter.Get("/{groupName}/transparency/average", groupController.GetGroupTransparencyAverage())
-		//sensorRouter.Get("/{groupName}/species", groupController.GetGroupFishSpecies())
+		sensorRouter.Get("/{groupName}/species", groupController.GetGroupFishSpecies())
 		//sensorRouter.Get("/{groupName}/species/top/{N}", groupController.GetGroupTopFishSpecies())
 	})
 }

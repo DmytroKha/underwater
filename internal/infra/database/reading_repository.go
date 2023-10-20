@@ -21,6 +21,7 @@ type ReadingRepository interface {
 	GetAverageTemperatureBySensor(sensorID int64, from time.Time, till time.Time) (float64, error)
 	GetAverageTemperatureForGroup(sensorsIds []int64) (float64, error)
 	GetAverageTransparencyForGroup(sensorsIds []int64) (float64, error)
+	FindBySensorsIDs(sensorsIDs []int64) ([]domain.Reading, error)
 }
 
 type readingRepository struct {
@@ -108,6 +109,17 @@ func (r readingRepository) GetAverageTransparencyForGroup(sensorsIDs []int64) (f
 	averageTransparency = result.Transparency
 
 	return averageTransparency, nil
+}
+
+func (r readingRepository) FindBySensorsIDs(sensorsIDs []int64) ([]domain.Reading, error) {
+	var re []reading
+
+	err := r.coll.Find(db.Cond{"sensor_id IN": sensorsIDs}).All(&re)
+	if err != nil {
+		return []domain.Reading{}, err
+	}
+
+	return r.mapModelToDomainCollection(re), nil
 }
 
 func (r readingRepository) mapDomainToModel(re domain.Reading) reading {

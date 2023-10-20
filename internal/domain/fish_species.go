@@ -6,3 +6,9 @@ type FishSpecies struct {
 	Name      string `json:"name"`
 	Count     int64  `json:"count"`
 }
+
+type Fishes struct {
+	Items []FishSpecies
+	Total uint64
+	Pages uint64
+}

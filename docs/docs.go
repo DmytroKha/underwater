@@ -16,6 +16,48 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/group/{groupName}/species": {
+            "get": {
+                "description": "Get fish species in a group.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Group Fish Species",
+                "operationId": "get-group-fish-species",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Name of the Sensors",
+                        "name": "groupName",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/resources.FishDto"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/group/{groupName}/temperature/average": {
             "get": {
                 "description": "Get the average temperature detected by a particular sensors in a group.",
@@ -57,7 +99,7 @@ const docTemplate = `{
         },
         "/group/{groupName}/transparency/average": {
             "get": {
-                "description": "Get the average transparency detected by a particular sensors in a group.",
+                "description": "Get the average transparency detected by sensors in a group.",
                 "produces": [
                     "application/json"
                 ],
@@ -166,6 +208,19 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "resources.FishDto": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         }
