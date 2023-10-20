@@ -87,23 +87,26 @@ func main() {
 	sensorRepository := database.NewSensorRepository(sess)
 	readingRepository := database.NewReadingRepository(sess)
 	fishSpeciesRepository := database.NewFishSpeciesRepository(sess)
+	groupRepository := database.NewGroupRepository(sess)
 
 	//Service
 	var readingService app.ReadingService
 	sensorService := app.NewSensorService(sensorRepository, &readingService)
 	fishSpeciesService := app.NewFishSpeciesService(fishSpeciesRepository)
 	readingService = app.NewReadingService(readingRepository, sensorService, fishSpeciesService)
+	groupService := app.NewGroupService(groupRepository, sensorService, readingService)
 
 	//Controllers
 	sensorController := controllers.NewSensorController(sensorService)
-	readingController := controllers.NewReadingController(readingService, sensorService)
+	//readingController := controllers.NewReadingController(readingService, sensorService)
+	groupController := controllers.NewGroupController(groupService)
 
 	// HTTP Server
 	err = http.Server(
 		ctx,
 		http.Router(
 			sensorController,
-			readingController,
+			groupController,
 		),
 	)
 

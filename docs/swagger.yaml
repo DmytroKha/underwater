@@ -6,6 +6,60 @@ info:
   title: Halo Underwater API
   version: "1.0"
 paths:
+  /group/{groupName}/temperature/average:
+    get:
+      description: Get the average temperature detected by a particular sensors in
+        a group.
+      operationId: get-group-temperature-average
+      parameters:
+      - description: Group Name of the Sensors
+        in: path
+        name: groupName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get Group Temperature Average
+  /group/{groupName}/transparency/average:
+    get:
+      description: Get the average transparency detected by a particular sensors in
+        a group.
+      operationId: get-group-transparency-average
+      parameters:
+      - description: Group Name of the Sensors
+        in: path
+        name: groupName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get Group Transparency Average
   /ping:
     get:
       consumes:
@@ -39,6 +93,7 @@ paths:
       - description: Till Date/Time (UNIX Timestamp)
         in: query
         name: till
+        required: true
         type: integer
       produces:
       - application/json

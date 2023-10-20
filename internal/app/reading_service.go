@@ -10,9 +10,10 @@ import (
 )
 
 type ReadingService interface {
-	//StartSensorDataGeneration()
 	GenerateSensorData(sensor domain.Sensor)
 	GetAverageTemperatureBySensor(sensorID int64, from int64, till int64) (float64, error)
+	GetAverageTemperatureForGroup(sensorsIDs []int64) (float64, error)
+	GetAverageTransparencyForGroup(sensorsIDs []int64) (float64, error)
 }
 
 type readingService struct {
@@ -23,7 +24,6 @@ type readingService struct {
 
 var previousTransparency = make(map[int64]int64)
 
-//var allFish []string
 var transparencyMutex sync.Mutex
 
 func NewReadingService(r database.ReadingRepository, ss SensorService, fs FishSpeciesService) ReadingService {
@@ -34,24 +34,18 @@ func NewReadingService(r database.ReadingRepository, ss SensorService, fs FishSp
 	}
 }
 
-//func (s readingService) StartSensorDataGeneration() {
-//	generateFishSpecies()
-//	sensors, err := s.sensorService.FindAll()
-//	if err != nil {
-//		log.Print(err)
-//		return
-//	}
-//
-//	for _, sensor := range sensors {
-//		go s.GenerateSensorData(sensor)
-//	}
-//	select {}
-//}
-
 func (s readingService) GetAverageTemperatureBySensor(sensorID int64, from int64, till int64) (float64, error) {
 	fromDate := time.Unix(from, 0)
 	tillDate := time.Unix(till, 0)
 	return s.readingRepo.GetAverageTemperatureBySensor(sensorID, fromDate, tillDate)
+}
+
+func (s readingService) GetAverageTemperatureForGroup(sensorsIDs []int64) (float64, error) {
+	return s.readingRepo.GetAverageTemperatureForGroup(sensorsIDs)
+}
+
+func (s readingService) GetAverageTransparencyForGroup(sensorsIDs []int64) (float64, error) {
+	return s.readingRepo.GetAverageTransparencyForGroup(sensorsIDs)
 }
 
 func (s readingService) GenerateSensorData(sensor domain.Sensor) {

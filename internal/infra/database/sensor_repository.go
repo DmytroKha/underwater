@@ -22,6 +22,7 @@ type SensorRepository interface {
 	//Save(reading domain.Reading) error
 	FindAll() ([]domain.Sensor, error)
 	FindByName(codeName string) (domain.Sensor, error)
+	FindByGroupID(groupID int64) ([]domain.Sensor, error)
 }
 
 type sensorRepository struct {
@@ -67,6 +68,17 @@ func (r sensorRepository) FindByName(codeName string) (domain.Sensor, error) {
 	}
 
 	return r.mapModelToDomain(s), nil
+}
+
+func (r sensorRepository) FindByGroupID(groupID int64) ([]domain.Sensor, error) {
+	var s []sensor
+
+	err := r.coll.Find(db.Cond{"group_id": groupID}).All(&s)
+	if err != nil {
+		return []domain.Sensor{}, err
+	}
+
+	return r.mapModelToDomainCollection(s), nil
 }
 
 func (r sensorRepository) mapDomainToModel(s domain.Sensor) sensor {

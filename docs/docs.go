@@ -16,6 +16,84 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/group/{groupName}/temperature/average": {
+            "get": {
+                "description": "Get the average temperature detected by a particular sensors in a group.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Group Temperature Average",
+                "operationId": "get-group-temperature-average",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Name of the Sensors",
+                        "name": "groupName",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/group/{groupName}/transparency/average": {
+            "get": {
+                "description": "Get the average transparency detected by a particular sensors in a group.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Group Transparency Average",
+                "operationId": "get-group-transparency-average",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group Name of the Sensors",
+                        "name": "groupName",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/ping": {
             "get": {
                 "consumes": [
@@ -65,7 +143,8 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "Till Date/Time (UNIX Timestamp)",
                         "name": "till",
-                        "in": "query"
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {

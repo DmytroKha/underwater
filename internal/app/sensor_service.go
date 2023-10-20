@@ -8,6 +8,7 @@ import (
 type SensorService interface {
 	FindAll() ([]domain.Sensor, error)
 	FindByName(codeName string) (domain.Sensor, error)
+	FindByGroupID(groupID int64) ([]domain.Sensor, error)
 	GetAverageTemperatureBySensor(codeName string, from int64, till int64) (float64, error)
 }
 
@@ -25,6 +26,10 @@ func NewSensorService(r database.SensorRepository, rs *ReadingService) SensorSer
 
 func (s sensorService) FindAll() ([]domain.Sensor, error) {
 	return s.sensorRepo.FindAll()
+}
+
+func (s sensorService) FindByGroupID(groupID int64) ([]domain.Sensor, error) {
+	return s.sensorRepo.FindByGroupID(groupID)
 }
 
 func (s sensorService) FindByName(codeName string) (domain.Sensor, error) {
