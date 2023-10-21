@@ -5,3 +5,46 @@ services:
     image: "redis:alpine"
     ports:
       - "6364:6379"
+
+  app:
+    container_name: halo_back
+    environment:
+      - DB_NAME=${DB_NAME:-halo}
+      - DB_HOST=${DB_HOST:-postgresdb}
+      - DB_USER=${DB_USER:-db_user}
+      - DB_PASSWORD=${DB_PASSWORD:-db_password}
+      - RD_HOST=${RD_HOST:-redisdb}
+      - RD_BASE=${RD_BASE:-0}
+      - RD_PASSWORD=${RD_PASSWORD:-password}
+    build:
+      context: ../
+      dockerfile: .docker/Dockerfile
+    ports:
+      - '8081:8080'
+    restart: unless-stopped
+    depends_on:
+      - postgresdb
+    networks:
+      - default
+
+  postgresdb:
+    image: postgres:14.4
+    container_name: halo_db
+    environment:
+      - POSTGRES_USER=${DB_USER:-db_user}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-db_password}
+      - POSTGRES_DB=${DB_NAME:-halo}
+      - DATABASE_HOST=${DB_HOST:-localhost}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - '54322:5432'
+    networks:
+      - default
+
+volumes:
+  pg_data:
+
+networks:
+  default:
+    driver: bridge
