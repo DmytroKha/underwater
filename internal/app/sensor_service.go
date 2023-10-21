@@ -12,6 +12,7 @@ type SensorService interface {
 	FindByCoordinates(xMin, yMin, zMin, xMax, yMax, zMax float64) ([]domain.Sensor, error)
 	GetAverageTemperatureBySensor(codeName string, from int64, till int64) (float64, error)
 	GetRegionMinTemperature(xMin, yMin, zMin, xMax, yMax, zMax float64) (float64, error)
+	GetRegionMaxTemperature(xMin, yMin, zMin, xMax, yMax, zMax float64) (float64, error)
 }
 
 type sensorService struct {
@@ -62,4 +63,18 @@ func (s sensorService) GetRegionMinTemperature(xMin, yMin, zMin, xMax, yMax, zMa
 	}
 
 	return (*s.readingService).GetRegionMinTemperatureBySensors(sensorsIDs)
+}
+
+func (s sensorService) GetRegionMaxTemperature(xMin, yMin, zMin, xMax, yMax, zMax float64) (float64, error) {
+	sensors, err := s.FindByCoordinates(xMin, yMin, zMin, xMax, yMax, zMax)
+	if err != nil {
+		return 0, err
+	}
+
+	var sensorsIDs []int64
+	for _, v := range sensors {
+		sensorsIDs = append(sensorsIDs, v.ID)
+	}
+
+	return (*s.readingService).GetRegionMaxTemperatureBySensors(sensorsIDs)
 }

@@ -75,6 +75,6 @@ func GroupRouter(r chi.Router, groupController controllers.GroupController) {
 func RegionRouter(r chi.Router, sensorController controllers.SensorController) {
 	r.Route("/region", func(sensorRouter chi.Router) {
 		sensorRouter.Get("/temperature/min", sensorController.GetRegionMinTemperature())
-		//sensorRouter.Get("/temperature/max", sensorController.GetRegionMaxTemperature())
+		sensorRouter.Get("/temperature/max", sensorController.GetRegionMaxTemperature())
 	})
 }

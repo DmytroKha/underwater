@@ -15,6 +15,7 @@ type ReadingService interface {
 	GetAverageTemperatureForGroup(sensorsIDs []int64) (float64, error)
 	GetAverageTransparencyForGroup(sensorsIDs []int64) (float64, error)
 	GetRegionMinTemperatureBySensors(sensorsIDs []int64) (float64, error)
+	GetRegionMaxTemperatureBySensors(sensorsIDs []int64) (float64, error)
 	FindBySensorsIDs(sensorsIDs []int64, from int64, till int64) ([]domain.Reading, error)
 }
 
@@ -52,6 +53,10 @@ func (s readingService) GetAverageTransparencyForGroup(sensorsIDs []int64) (floa
 
 func (s readingService) GetRegionMinTemperatureBySensors(sensorsIDs []int64) (float64, error) {
 	return s.readingRepo.GetRegionMinTemperatureBySensors(sensorsIDs)
+}
+
+func (s readingService) GetRegionMaxTemperatureBySensors(sensorsIDs []int64) (float64, error) {
+	return s.readingRepo.GetRegionMaxTemperatureBySensors(sensorsIDs)
 }
 
 func (s readingService) FindBySensorsIDs(sensorsIDs []int64, from int64, till int64) ([]domain.Reading, error) {

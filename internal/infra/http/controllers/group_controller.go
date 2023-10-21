@@ -26,6 +26,7 @@ func NewGroupController(ctx context.Context, s app.GroupService) GroupController
 }
 
 // @Summary Get Group Temperature Average
+// @Tags     Group
 // @Description Get the average temperature detected by a particular sensors in a group.
 // @ID get-group-temperature-average
 // @Param groupName path string true "Group Name of the Sensors"
@@ -66,6 +67,7 @@ func (c GroupController) GetGroupTemperatureAverage() http.HandlerFunc {
 }
 
 // @Summary Get Group Transparency Average
+// @Tags     Group
 // @Description Get the average transparency detected by sensors in a group.
 // @ID get-group-transparency-average
 // @Param groupName path string true "Group Name of the Sensors"
@@ -106,6 +108,7 @@ func (c GroupController) GetGroupTransparencyAverage() http.HandlerFunc {
 }
 
 // @Summary Get Group Fish Species
+// @Tags     Group
 // @Description Get fish species in a group.
 // @ID get-group-fish-species
 // @Param groupName path string true "Group Name of the Sensors"
@@ -138,6 +141,7 @@ func (c GroupController) GetGroupFishSpecies() http.HandlerFunc {
 }
 
 // @Summary Get Group Top Fish Species
+// @Tags     Group
 // @Description Get top fish species in a group.
 // @ID get-group-top-fish-species
 // @Param groupName path string true "Group Name of the Sensors"

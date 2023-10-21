@@ -22,6 +22,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Group"
+                ],
                 "summary": "Get Group Fish Species",
                 "operationId": "get-group-fish-species",
                 "parameters": [
@@ -63,6 +66,9 @@ const docTemplate = `{
                 "description": "Get top fish species in a group.",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Group"
                 ],
                 "summary": "Get Group Top Fish Species",
                 "operationId": "get-group-top-fish-species",
@@ -125,6 +131,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Group"
+                ],
                 "summary": "Get Group Temperature Average",
                 "operationId": "get-group-temperature-average",
                 "parameters": [
@@ -163,6 +172,9 @@ const docTemplate = `{
                 "description": "Get the average transparency detected by sensors in a group.",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Group"
                 ],
                 "summary": "Get Group Transparency Average",
                 "operationId": "get-group-transparency-average",
@@ -219,11 +231,91 @@ const docTemplate = `{
                 }
             }
         },
+        "/region/temperature/max": {
+            "get": {
+                "description": "Get the maximum temperature detected by sensors in the region.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Region"
+                ],
+                "summary": "Get Region Max Temperature",
+                "operationId": "get-region-max-temperature",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Min X",
+                        "name": "xMin",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Max X",
+                        "name": "xMax",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Min Y",
+                        "name": "yMin",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Max Y",
+                        "name": "yMax",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Min Z",
+                        "name": "zMin",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Max Z",
+                        "name": "zMax",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/region/temperature/min": {
             "get": {
                 "description": "Get the minimum temperature detected by sensors in the region.",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Region"
                 ],
                 "summary": "Get Region Min Temperature",
                 "operationId": "get-region-min-temperature",
@@ -275,7 +367,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "integer"
+                            "type": "number"
                         }
                     },
                     "400": {
@@ -298,6 +390,9 @@ const docTemplate = `{
                 "description": "Get the average temperature detected by a particular sensor between specified date/time pairs.",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Sensor"
                 ],
                 "summary": "Get Sensor Temperature Average",
                 "operationId": "get-sensor-temperature-average",
@@ -328,7 +423,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "integer"
+                            "type": "number"
                         }
                     },
                     "400": {

@@ -22,6 +22,7 @@ type ReadingRepository interface {
 	GetAverageTemperatureForGroup(sensorsIds []int64) (float64, error)
 	GetAverageTransparencyForGroup(sensorsIds []int64) (float64, error)
 	GetRegionMinTemperatureBySensors(sensorsIDs []int64) (float64, error)
+	GetRegionMaxTemperatureBySensors(sensorsIDs []int64) (float64, error)
 	FindBySensorsIDs(sensorsIDs []int64, fromDate time.Time, tillDate time.Time) ([]domain.Reading, error)
 }
 
@@ -130,6 +131,26 @@ func (r readingRepository) GetRegionMinTemperatureBySensors(sensorsIDs []int64) 
 	minTemperature = result.Temperature
 
 	return minTemperature, nil
+}
+
+func (r readingRepository) GetRegionMaxTemperatureBySensors(sensorsIDs []int64) (float64, error) {
+	var maxTemperature float64
+
+	var result struct {
+		Temperature float64 `db:"temperature"`
+	}
+
+	query := r.sess.SQL().Select(db.Raw("MAX(temperature) AS temperature")).From("sensor_readings").
+		Where(db.Cond{"sensor_id IN": sensorsIDs})
+
+	err := query.One(&result)
+	if err != nil {
+		return 0, err
+	}
+
+	maxTemperature = result.Temperature
+
+	return maxTemperature, nil
 }
 
 func (r readingRepository) FindBySensorsIDs(sensorsIDs []int64, fromDate time.Time, tillDate time.Time) ([]domain.Reading, error) {

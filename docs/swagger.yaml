@@ -42,6 +42,8 @@ paths:
           schema:
             type: string
       summary: Get Group Fish Species
+      tags:
+      - Group
   /group/{groupName}/species/top/{N}:
     get:
       description: Get top fish species in a group.
@@ -83,6 +85,8 @@ paths:
           schema:
             type: string
       summary: Get Group Top Fish Species
+      tags:
+      - Group
   /group/{groupName}/temperature/average:
     get:
       description: Get the average temperature detected by a particular sensors in
@@ -110,6 +114,8 @@ paths:
           schema:
             type: string
       summary: Get Group Temperature Average
+      tags:
+      - Group
   /group/{groupName}/transparency/average:
     get:
       description: Get the average transparency detected by sensors in a group.
@@ -136,6 +142,8 @@ paths:
           schema:
             type: string
       summary: Get Group Transparency Average
+      tags:
+      - Group
   /ping:
     get:
       consumes:
@@ -150,6 +158,59 @@ paths:
       summary: This endpoint can be used as health check for this application.
       tags:
       - Health
+  /region/temperature/max:
+    get:
+      description: Get the maximum temperature detected by sensors in the region.
+      operationId: get-region-max-temperature
+      parameters:
+      - description: Min X
+        in: query
+        name: xMin
+        required: true
+        type: integer
+      - description: Max X
+        in: query
+        name: xMax
+        required: true
+        type: integer
+      - description: Min Y
+        in: query
+        name: yMin
+        required: true
+        type: integer
+      - description: Max Y
+        in: query
+        name: yMax
+        required: true
+        type: integer
+      - description: Min Z
+        in: query
+        name: zMin
+        required: true
+        type: integer
+      - description: Max Z
+        in: query
+        name: zMax
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: number
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get Region Max Temperature
+      tags:
+      - Region
   /region/temperature/min:
     get:
       description: Get the minimum temperature detected by sensors in the region.
@@ -191,7 +252,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: integer
+            type: number
         "400":
           description: Bad Request
           schema:
@@ -201,6 +262,8 @@ paths:
           schema:
             type: string
       summary: Get Region Min Temperature
+      tags:
+      - Region
   /sensor/{codeName}/temperature/average:
     get:
       description: Get the average temperature detected by a particular sensor between
@@ -228,7 +291,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: integer
+            type: number
         "400":
           description: Bad Request
           schema:
@@ -238,4 +301,6 @@ paths:
           schema:
             type: string
       summary: Get Sensor Temperature Average
+      tags:
+      - Sensor
 swagger: "2.0"
