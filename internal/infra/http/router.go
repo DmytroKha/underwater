@@ -41,6 +41,7 @@ func Router(
 
 				SensorRouter(apiRouter, sensorController)
 				GroupRouter(apiRouter, groupController)
+				RegionRouter(apiRouter, sensorController)
 
 				apiRouter.Handle("/*", NotFoundJSON())
 			})
@@ -68,5 +69,12 @@ func GroupRouter(r chi.Router, groupController controllers.GroupController) {
 		sensorRouter.Get("/{groupName}/transparency/average", groupController.GetGroupTransparencyAverage())
 		sensorRouter.Get("/{groupName}/species", groupController.GetGroupFishSpecies())
 		sensorRouter.Get("/{groupName}/species/top/{N}", groupController.GetGroupTopFishSpecies())
+	})
+}
+
+func RegionRouter(r chi.Router, sensorController controllers.SensorController) {
+	r.Route("/region", func(sensorRouter chi.Router) {
+		sensorRouter.Get("/temperature/min", sensorController.GetRegionMinTemperature())
+		//sensorRouter.Get("/temperature/max", sensorController.GetRegionMaxTemperature())
 	})
 }

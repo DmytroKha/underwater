@@ -14,6 +14,7 @@ type ReadingService interface {
 	GetAverageTemperatureBySensor(sensorID int64, from int64, till int64) (float64, error)
 	GetAverageTemperatureForGroup(sensorsIDs []int64) (float64, error)
 	GetAverageTransparencyForGroup(sensorsIDs []int64) (float64, error)
+	GetRegionMinTemperatureBySensors(sensorsIDs []int64) (float64, error)
 	FindBySensorsIDs(sensorsIDs []int64, from int64, till int64) ([]domain.Reading, error)
 }
 
@@ -47,6 +48,10 @@ func (s readingService) GetAverageTemperatureForGroup(sensorsIDs []int64) (float
 
 func (s readingService) GetAverageTransparencyForGroup(sensorsIDs []int64) (float64, error) {
 	return s.readingRepo.GetAverageTransparencyForGroup(sensorsIDs)
+}
+
+func (s readingService) GetRegionMinTemperatureBySensors(sensorsIDs []int64) (float64, error) {
+	return s.readingRepo.GetRegionMinTemperatureBySensors(sensorsIDs)
 }
 
 func (s readingService) FindBySensorsIDs(sensorsIDs []int64, from int64, till int64) ([]domain.Reading, error) {
@@ -113,19 +118,3 @@ func generateFakeTransparency(groupID int64) int64 {
 
 	return newTransparency
 }
-
-//func generateFishSpecies() {
-//
-//	url := "https://oceana.org/ocean-fishes/"
-//
-//	doc, err := goquery.NewDocument(url)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	doc.Find("div.tb-grid-column h2").Each(func(index int, item *goquery.Selection) {
-//		fishName := item.Text()
-//		allFish = append(allFish, fishName)
-//	})
-//
-//}

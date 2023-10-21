@@ -23,6 +23,7 @@ type SensorRepository interface {
 	FindAll() ([]domain.Sensor, error)
 	FindByName(codeName string) (domain.Sensor, error)
 	FindByGroupID(groupID int64) ([]domain.Sensor, error)
+	FindByCoordinates(xMin, yMin, zMin, xMax, yMax, zMax float64) ([]domain.Sensor, error)
 }
 
 type sensorRepository struct {
@@ -74,6 +75,25 @@ func (r sensorRepository) FindByGroupID(groupID int64) ([]domain.Sensor, error) 
 	var s []sensor
 
 	err := r.coll.Find(db.Cond{"group_id": groupID}).All(&s)
+	if err != nil {
+		return []domain.Sensor{}, err
+	}
+
+	return r.mapModelToDomainCollection(s), nil
+}
+
+func (r sensorRepository) FindByCoordinates(xMin, yMin, zMin, xMax, yMax, zMax float64) ([]domain.Sensor, error) {
+	var s []sensor
+
+	dbCond := db.Cond{}
+	dbCond["x >="] = xMin
+	dbCond["y >="] = yMin
+	dbCond["z >="] = zMin
+	dbCond["x <="] = xMax
+	dbCond["y <="] = yMax
+	dbCond["z <="] = zMax
+
+	err := r.coll.Find(dbCond).All(&s)
 	if err != nil {
 		return []domain.Sensor{}, err
 	}

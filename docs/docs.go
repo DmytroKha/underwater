@@ -219,6 +219,80 @@ const docTemplate = `{
                 }
             }
         },
+        "/region/temperature/min": {
+            "get": {
+                "description": "Get the minimum temperature detected by sensors in the region.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Region Min Temperature",
+                "operationId": "get-region-min-temperature",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Min X",
+                        "name": "xMin",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Max X",
+                        "name": "xMax",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Min Y",
+                        "name": "yMin",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Max Y",
+                        "name": "yMax",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Min Z",
+                        "name": "zMin",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Max Z",
+                        "name": "zMax",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/sensor/{codeName}/temperature/average": {
             "get": {
                 "description": "Get the average temperature detected by a particular sensor between specified date/time pairs.",
