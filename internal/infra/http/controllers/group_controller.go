@@ -1,22 +1,27 @@
 package controllers
 
 import (
+	"context"
 	"errors"
+	"github.com/DmytroKha/underwater/config"
 	"github.com/DmytroKha/underwater/internal/app"
 	"github.com/DmytroKha/underwater/internal/infra/http/resources"
 	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type GroupController struct {
 	groupService app.GroupService
+	ctx          context.Context
 }
 
-func NewGroupController(s app.GroupService) GroupController {
+func NewGroupController(ctx context.Context, s app.GroupService) GroupController {
 	return GroupController{
 		groupService: s,
+		ctx:          ctx,
 	}
 }
 
@@ -39,12 +44,23 @@ func (c GroupController) GetGroupTemperatureAverage() http.HandlerFunc {
 			return
 		}
 
+		// Спробуйте отримати результат з Redis за ключем, який включає інформацію про URL
+		key := "group_temperature_average:" + groupName
+		cachedResult, err := config.Redis.Get(c.ctx, key).Result()
+		if err == nil {
+			// Відправте кешований результат як відповідь
+			averageTemperature, _ := strconv.ParseFloat(cachedResult, 64)
+			Success(w, averageTemperature)
+			return
+		}
+
 		averageTemperature, err := c.groupService.GetAverageTemperatureForGroup(groupName)
 		if err != nil {
 			log.Printf("GroupController: %s", err)
 			InternalServerError(w, err)
 			return
 		}
+		config.Redis.Set(c.ctx, key, averageTemperature, 60*time.Second)
 		Success(w, averageTemperature)
 
 	}

@@ -66,6 +66,7 @@ func main() {
 
 	var conf = config.GetConfiguration()
 	config.GenerateFishSpecies()
+	config.CreateRedisClient()
 
 	err := database.Migrate(conf)
 	if err != nil {
@@ -99,7 +100,7 @@ func main() {
 	//Controllers
 	sensorController := controllers.NewSensorController(sensorService)
 	//readingController := controllers.NewReadingController(readingService, sensorService)
-	groupController := controllers.NewGroupController(groupService)
+	groupController := controllers.NewGroupController(ctx, groupService)
 
 	// HTTP Server
 	err = http.Server(
