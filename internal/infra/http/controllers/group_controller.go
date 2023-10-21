@@ -44,11 +44,10 @@ func (c GroupController) GetGroupTemperatureAverage() http.HandlerFunc {
 			return
 		}
 
-		// Спробуйте отримати результат з Redis за ключем, який включає інформацію про URL
 		key := "group_temperature_average:" + groupName
-		cachedResult, err := config.Redis.Get(c.ctx, key).Result()
+		rds := config.Redis
+		cachedResult, err := rds.Get(c.ctx, key).Result()
 		if err == nil {
-			// Відправте кешований результат як відповідь
 			averageTemperature, _ := strconv.ParseFloat(cachedResult, 64)
 			Success(w, averageTemperature)
 			return
@@ -60,7 +59,7 @@ func (c GroupController) GetGroupTemperatureAverage() http.HandlerFunc {
 			InternalServerError(w, err)
 			return
 		}
-		config.Redis.Set(c.ctx, key, averageTemperature, 60*time.Second)
+		rds.Set(c.ctx, key, averageTemperature, 10*time.Second)
 		Success(w, averageTemperature)
 
 	}
@@ -85,12 +84,22 @@ func (c GroupController) GetGroupTransparencyAverage() http.HandlerFunc {
 			return
 		}
 
+		key := "group_transparency_average:" + groupName
+		rds := config.Redis
+		cachedResult, err := rds.Get(c.ctx, key).Result()
+		if err == nil {
+			averageTemperature, _ := strconv.ParseFloat(cachedResult, 64)
+			Success(w, averageTemperature)
+			return
+		}
+
 		averageTemperature, err := c.groupService.GetAverageTransparencyForGroup(groupName)
 		if err != nil {
 			log.Printf("GroupController: %s", err)
 			InternalServerError(w, err)
 			return
 		}
+		rds.Set(c.ctx, key, averageTemperature, 10*time.Second)
 		Success(w, averageTemperature)
 
 	}

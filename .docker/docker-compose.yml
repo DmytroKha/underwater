@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   redis:
+    container_name: redis
     image: "redis:alpine"
     ports:
       - "6364:6379"

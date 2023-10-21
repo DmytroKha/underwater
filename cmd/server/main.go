@@ -18,22 +18,6 @@ import (
 	"syscall"
 )
 
-//var AllFish []string
-//
-//func init() {
-//	url := "https://oceana.org/ocean-fishes/"
-//
-//	doc, err := goquery.NewDocument(url)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//
-//	doc.Find("div.tb-grid-column h2").Each(func(index int, item *goquery.Selection) {
-//		fishName := item.Text()
-//		AllFish = append(AllFish, fishName)
-//	})
-//}
-
 // @title       Halo Underwater API
 // @version     1.0
 // @description API Server for Halo Underwater application.
@@ -66,7 +50,7 @@ func main() {
 
 	var conf = config.GetConfiguration()
 	config.GenerateFishSpecies()
-	config.CreateRedisClient()
+	config.CreateRedisClient(ctx, conf)
 
 	err := database.Migrate(conf)
 	if err != nil {
