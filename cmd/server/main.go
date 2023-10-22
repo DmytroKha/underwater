@@ -83,7 +83,6 @@ func main() {
 
 	//Controllers
 	sensorController := controllers.NewSensorController(sensorService)
-	//readingController := controllers.NewReadingController(readingService, sensorService)
 	groupController := controllers.NewGroupController(ctx, groupService)
 
 	// HTTP Server
@@ -101,7 +100,6 @@ func main() {
 		return
 	}
 
-	//readingService.StartSensorDataGeneration()
 	jobs.StartSensorDataGeneration(&readingService, &sensorService)
 
 }
