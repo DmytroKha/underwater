@@ -19,7 +19,6 @@ type sensor struct {
 }
 
 type SensorRepository interface {
-	//Save(reading domain.Reading) error
 	FindAll() ([]domain.Sensor, error)
 	FindByName(codeName string) (domain.Sensor, error)
 	FindByGroupID(groupID int64) ([]domain.Sensor, error)
@@ -35,17 +34,6 @@ func NewSensorRepository(dbSession db.Session) SensorRepository {
 		coll: (dbSession).Collection(SensorsTableName),
 	}
 }
-
-//func (r sensorRepository) Save(reading models.Reading) error {
-//	u := r.mapDomainToModel(reading)
-//
-//	err := r.coll.InsertReturning(&u)
-//	if err != nil {
-//		return domain.User{}, err
-//	}
-//
-//	return r.mapModelToDomain(u), nil
-//}
 
 func (r sensorRepository) FindAll() ([]domain.Sensor, error) {
 	var sensors []sensor

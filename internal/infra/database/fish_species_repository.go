@@ -50,7 +50,6 @@ func (r fishSpeciesRepository) GetFishesForGroup(readingsIDs []int64) ([]domain.
 		Where(db.Cond{"reading_id IN": readingsIDs}).
 		GroupBy("name").
 		OrderBy("name")
-	//OrderBy("count DESC")
 
 	err := query.All(&fs)
 
@@ -63,14 +62,6 @@ func (r fishSpeciesRepository) GetFishesForGroup(readingsIDs []int64) ([]domain.
 
 func (r fishSpeciesRepository) GetTopFishesForGroup(readingsIDs []int64, fishCount int64) ([]domain.FishSpecies, error) {
 	var fs []fishSpecies
-
-	//dbCond := db.Cond{}
-	//dbCond["reading_id IN"] = readingsIDs
-	//if fromDate != tillDate {
-	//	dbCond["timestamp >="] = fromDate
-	//	dbCond["timestamp <="] = tillDate
-	//
-	//}
 
 	query := r.sess.SQL().Select(db.Raw("name, SUM(count) AS count")).From("fish_species").
 		Where(db.Cond{"reading_id IN": readingsIDs}).

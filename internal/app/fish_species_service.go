@@ -51,7 +51,6 @@ func (s fishSpeciesService) GetTopFishesForGroup(readingsIDs []int64, fishCount 
 
 func generateFakeFishSpecies() map[string]int64 {
 
-	//var fishSpecies []domain.FishSpecies
 	numFishSpecies := rand.Intn(10)
 	rand.Seed(time.Now().UnixNano())
 	fishCount := make(map[string]int64)

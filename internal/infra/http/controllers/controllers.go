@@ -22,21 +22,6 @@ func Success(w http.ResponseWriter, body interface{}) {
 	}
 }
 
-func Created(w http.ResponseWriter, body interface{}) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-
-	err := json.NewEncoder(w).Encode(body)
-	if err != nil {
-		log.Print(err)
-	}
-}
-
-func noContent(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNoContent)
-}
-
 func BadRequest(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusBadRequest)
@@ -54,22 +39,6 @@ func Forbidden(w http.ResponseWriter, err error) {
 func InternalServerError(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusInternalServerError)
-
-	encodeErrorBody(w, err)
-}
-
-//nolint
-func validationError(w http.ResponseWriter, err error) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusUnprocessableEntity)
-
-	encodeErrorBody(w, err)
-}
-
-//nolint
-func genericError(w http.ResponseWriter, err error) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusBadRequest)
 
 	encodeErrorBody(w, err)
 }
@@ -95,11 +64,4 @@ func encodeErrorBody(w http.ResponseWriter, err error) {
 	if e != nil {
 		log.Print(e)
 	}
-}
-
-func Unauthorized(w http.ResponseWriter, err error) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusUnauthorized)
-
-	encodeErrorBody(w, err)
 }
