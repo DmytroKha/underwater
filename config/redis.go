@@ -17,9 +17,9 @@ func CreateRedisClient(ctx context.Context, conf Configuration) {
 	}
 
 	rds := redis.NewClient(&redis.Options{
-		Addr:     conf.RedisHost,
-		Password: conf.RedisPassword,
-		DB:       RedisDatabase,
+		Addr: conf.RedisHost,
+		//Password: conf.RedisPassword,
+		DB: RedisDatabase,
 	})
 
 	_, err = rds.Ping(ctx).Result()

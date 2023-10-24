@@ -12,9 +12,9 @@ type Configuration struct {
 	DatabasePassword  string
 	MigrateToVersion  string
 	MigrationLocation string
-	RedisPassword     string
-	RedisDatabase     string
-	RedisHost         string
+	//RedisPassword     string
+	RedisDatabase string
+	RedisHost     string
 }
 
 func GetConfiguration() Configuration {
@@ -25,9 +25,9 @@ func GetConfiguration() Configuration {
 		DatabasePassword:  getOrFail("DB_PASSWORD"),
 		MigrateToVersion:  getOrDefault("MIGRATE", "latest"),
 		MigrationLocation: getOrDefault("MIGRATION_LOCATION", "migrations"),
-		RedisPassword:     getOrFail("RD_PASSWORD"),
-		RedisDatabase:     getOrFail("RD_BASE"),
-		RedisHost:         getOrFail("RD_HOST"),
+		//RedisPassword:     getOrFail("RD_PASSWORD"),
+		RedisDatabase: getOrFail("RD_BASE"),
+		RedisHost:     getOrFail("RD_HOST"),
 	}
 }
 
